@@ -1,6 +1,6 @@
 import experimental.ExOne;
 import experimental.ExTwo;
-import org.fs.ComparerUtils;
+import org.fs.comparer.Comparer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ public class UnitTests {
         exTwo.setIntTwo(5);
         exTwo.setStringTwo("asdf");
 
-        assertTrue(ComparerUtils.compareByEqualFields(exOne, exTwo));
+        assertTrue(Comparer.compare(exOne, exTwo).fieldNamesComparer().execute());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class UnitTests {
         exTwo.setIntTwo(5);
         exTwo.setStringTwo("asdf");
 
-        assertTrue(ComparerUtils.compareByEqualFields(exTwo, exOne));
+        assertTrue(Comparer.compare(exOne, exTwo).fieldNamesComparer().execute());
     }
 
     @Test
@@ -60,6 +60,29 @@ public class UnitTests {
         exTwo.setIntTwo(5);
         exTwo.setStringTwo("asdf");
 
-        assertFalse(ComparerUtils.compareByEqualFields(exOne, exTwo));
+        assertFalse(Comparer.compare(exOne, exTwo).fieldNamesComparer().execute());
+    }
+
+    @Test
+    @DisplayName("Compare ignore fields")
+    void test4() {
+        ExOne exOne = new ExOne();
+
+        exOne.setIntOne(1);
+        exOne.setStringOne("fd2safas");
+        exOne.setIntTwo(5);
+
+        ExTwo exTwo = new ExTwo();
+        exTwo.setIntOne(1);
+        exTwo.setStringOne("fdsafas");
+        exTwo.setIntTwo(5);
+        exTwo.setStringTwo("asdf");
+
+        boolean execute = Comparer.compare(exOne, exTwo)
+                .fieldNamesComparer()
+                .ignoreFields("stringOne", "stringTwo")
+                .execute();
+
+        assertTrue(execute);
     }
 }
